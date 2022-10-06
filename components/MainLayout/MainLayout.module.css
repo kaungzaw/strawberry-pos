@@ -1,0 +1,14 @@
+.sider {
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+}
+
+.title {
+  text-align: center;
+}
+
+.layout {
+  margin-left: 200px;
+  padding: 10px;
+}
