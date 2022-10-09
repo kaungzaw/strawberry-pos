@@ -49,7 +49,7 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
       },
     ])
       .sort(sort)
-      .limit(limit)
+      .limit(limit + skip)
       .skip(skip);
     return {
       props: { data: { total, result }, success: true },
