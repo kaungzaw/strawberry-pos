@@ -197,7 +197,7 @@ const CreateSale = ({ items, sales }) => {
           name="quantity"
           rules={[{ required: true }]}
         >
-          <InputNumber min={0} max={maxQuantity} disabled={maxQuantity === 0} />
+          <InputNumber min={1} max={maxQuantity} disabled={maxQuantity === 0} />
         </Form.Item>
 
         <Form.Item>

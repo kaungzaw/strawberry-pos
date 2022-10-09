@@ -87,7 +87,7 @@ const EditItem = ({ item }) => {
           name="buy_price"
           rules={[{ required: true }]}
         >
-          <InputNumber min={0} />
+          <InputNumber min={1} />
         </Form.Item>
 
         <Form.Item
@@ -95,7 +95,7 @@ const EditItem = ({ item }) => {
           name="sell_price"
           rules={[{ required: true }]}
         >
-          <InputNumber min={0} />
+          <InputNumber min={1} />
         </Form.Item>
 
         <Form.Item
@@ -103,7 +103,7 @@ const EditItem = ({ item }) => {
           name="quantity"
           rules={[{ required: true }]}
         >
-          <InputNumber min={0} />
+          <InputNumber min={1} />
         </Form.Item>
 
         <Form.Item>
