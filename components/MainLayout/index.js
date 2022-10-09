@@ -11,12 +11,12 @@ const items = [
   { label: <Link href="/">Dashboard</Link>, key: "dashboard" },
   { label: <Link href="/items?">Items</Link>, key: "items" },
   {
-    label: <Link href="/daily-reports?">Daily Reports</Link>,
-    key: "daily-reports",
-  },
-  {
     label: <Link href="/sales?">Sales</Link>,
     key: "sales",
+  },
+  {
+    label: <Link href="/daily-reports?">Daily Reports</Link>,
+    key: "daily-reports",
   },
   {
     label: "More",

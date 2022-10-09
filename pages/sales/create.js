@@ -198,6 +198,7 @@ const CreateSale = ({ items, sales }) => {
         dataSource={sales}
         rowKey="_id"
         size="small"
+        pagination={false}
         bordered
       />
     </>

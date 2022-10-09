@@ -5,23 +5,22 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { withAuthSsr } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import DailyReport from "models/DailyReport";
+import Sale from "models/Sale";
 import moment from "moment";
 
 export const getServerSideProps = withAuthSsr(async ({ query }) => {
   try {
     await dbConnect();
 
-    const sort = query.sort ?? "_id";
+    const sort = query.sort ?? "-date";
     const limit = query.limit ? Number(query.limit) : 10;
     const skip = query.skip ? Number(query.skip) : 0;
 
-    const total = await DailyReport.find().count();
-    const result = await DailyReport.aggregate([
+    const result = await Sale.aggregate([
       {
         $lookup: {
           from: "items",
-          localField: "items._id",
+          localField: "itemId",
           foreignField: "_id",
           as: "foundItems",
         },
@@ -31,13 +30,38 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
         $group: {
           _id: "$_id",
           date: { $first: "$date" },
-          items: { $push: "$foundItems" },
+          sell_price: { $first: "$sell_price" },
+          quantity: { $first: "$quantity" },
+        },
+      },
+      {
+        $project: {
+          date: 1,
+          sell_price: 1,
+          quantity: 1,
+          total: {
+            $multiply: ["$sell_price", "$quantity"],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$date",
+          total: { $sum: "$total" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: "$_id",
+          total: 1,
         },
       },
     ])
       .sort(sort)
       .limit(limit)
       .skip(skip);
+    const total = result.length;
     return {
       props: { data: { total, result }, success: true },
     };
@@ -72,16 +96,22 @@ const DailyReports = ({ data }) => {
       sorter: true,
       sortOrder:
         sort === "date" ? "ascend" : sort === "-date" ? "descend" : false,
-      render: (record) => (
-        <span>{moment(record.date).format("DD/MM/YYYY")}</span>
-      ),
+      render: (date) => <span>{moment(date).format("DD/MM/YYYY")}</span>,
+    },
+    {
+      title: "Total",
+      dataIndex: "total",
+      key: "total",
+      sorter: true,
+      sortOrder:
+        sort === "total" ? "ascend" : sort === "-total" ? "descend" : false,
     },
     {
       title: "Action",
       key: "action",
       render: (record) => (
         <Button>
-          <Link href={`/daily-reports/${record._id}`}>Edit</Link>
+          <Link href={`/daily-reports/${record.date}`}>Details</Link>
         </Button>
       ),
     },
@@ -108,14 +138,18 @@ const DailyReports = ({ data }) => {
         <title>POS - Daily Reports</title>
       </Head>
       <Button type="primary">
-        <Link href="/daily-reports/create">Create</Link>
+        <Link href="/sales/create">Create</Link>
       </Button>
-      <br />
-      <br />
+      {data.total === 0 && (
+        <>
+          <br />
+          <br />
+        </>
+      )}
       <Table
         columns={columns}
         dataSource={data.result}
-        rowKey="_id"
+        rowKey="date"
         onChange={handleTableChange}
         pagination={pagination}
         size="small"

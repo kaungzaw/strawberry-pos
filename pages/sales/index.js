@@ -12,7 +12,7 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
   try {
     await dbConnect();
 
-    const sort = query.sort ?? "_id";
+    const sort = query.sort ?? "-_id";
     const limit = query.limit ? Number(query.limit) : 10;
     const skip = query.skip ? Number(query.skip) : 0;
 
@@ -85,9 +85,7 @@ const Sales = ({ data }) => {
       sorter: true,
       sortOrder:
         sort === "date" ? "ascend" : sort === "-date" ? "descend" : false,
-      render: (record) => (
-        <span>{moment(record.date).format("DD/MM/YYYY")}</span>
-      ),
+      render: (date) => <span>{moment(date).format("DD/MM/YYYY")}</span>,
     },
     {
       title: "Name",
@@ -154,6 +152,12 @@ const Sales = ({ data }) => {
       <Button type="primary">
         <Link href="/sales/create">Create</Link>
       </Button>
+      {data.total === 0 && (
+        <>
+          <br />
+          <br />
+        </>
+      )}
       <Table
         columns={columns}
         dataSource={data.result}
