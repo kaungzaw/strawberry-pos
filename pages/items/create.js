@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Head from "next/head";
 import { Form, Input, InputNumber, Button, message } from "antd";
 import axios from "axios";
@@ -5,14 +6,19 @@ import axios from "axios";
 const CreateItem = () => {
   const [form] = Form.useForm();
 
+  const [loading, setLoading] = useState(false);
+
   async function onFinish(values) {
     try {
+      setLoading(true);
       await axios.post("/api/items", values);
       form.resetFields();
       message.success("Item created successfully.");
     } catch (error) {
       console.log(error);
       message.error("Failed to create Item.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -51,7 +57,12 @@ const CreateItem = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            disabled={loading}
+          >
             Create
           </Button>
         </Form.Item>

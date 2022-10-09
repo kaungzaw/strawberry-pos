@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Head from "next/head";
 import { Form, Input, InputNumber, Button, Modal, message } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
@@ -29,16 +30,21 @@ const EditItem = ({ item }) => {
   const router = useRouter();
   const [form] = Form.useForm();
 
+  const [loading, setLoading] = useState(false);
+
   async function onFinish(values) {
     try {
       if (form.isFieldsTouched()) {
-        axios.put(`/api/items/${item._id}`, values);
+        setLoading(true);
+        await axios.put(`/api/items/${item._id}`, values);
         router.replace(router.asPath);
         message.success("Item updated successfully.");
       }
     } catch (error) {
       console.log(error);
       message.error("Failed to update Item.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -71,7 +77,6 @@ const EditItem = ({ item }) => {
         onFinish={onFinish}
         initialValues={item}
         layout="vertical"
-        method="POST"
       >
         <Form.Item label="Name" name="name" rules={[{ required: true }]}>
           <Input />
@@ -102,7 +107,12 @@ const EditItem = ({ item }) => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            disabled={loading}
+          >
             Update
           </Button>
           &nbsp;&nbsp;&nbsp;
