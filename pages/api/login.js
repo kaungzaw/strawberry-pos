@@ -1,10 +1,13 @@
 import { withSessionRoute } from "lib/withSession";
 
+const USERNAME = process.env.USERNAME;
+const PASSWORD = process.env.PASSWORD;
+
 async function handler(req, res) {
   if (req.method === "POST") {
     const { username, password } = await req.body;
 
-    if (username === "admin" && password === "Admin1234") {
+    if (username === USERNAME && password === PASSWORD) {
       req.session.user = {
         username: "admin",
       };
