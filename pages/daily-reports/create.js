@@ -36,6 +36,7 @@ const CreateDailyReport = ({ items }) => {
   const [form] = Form.useForm();
 
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   async function onFinish(values) {
     const date = values.date.toISOString(true);
@@ -76,6 +77,7 @@ const CreateDailyReport = ({ items }) => {
 
   const saveData = async () => {
     try {
+      setLoading(true);
       const date = data[0].date;
       const items = data.map((i) => ({ _id: i._id, quantity: i.quantity }));
       await axios.post("/api/daily-reports", { date, items });
@@ -84,6 +86,8 @@ const CreateDailyReport = ({ items }) => {
     } catch (error) {
       console.log(error);
       message.error("Failed to create Daily Report.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -139,7 +143,14 @@ const CreateDailyReport = ({ items }) => {
         </Form.Item>
 
         <Form.Item label="Item" name="item" rules={[{ required: true }]}>
-          <Select placeholder="Select Item">
+          <Select
+            placeholder="Select Item"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().includes(input.toLowerCase())
+            }
+            showSearch
+          >
             {items.map((item) => (
               <Select.Option key={item._id} value={JSON.stringify(item)}>
                 {item.name}
@@ -167,7 +178,8 @@ const CreateDailyReport = ({ items }) => {
         type="primary"
         htmlType="button"
         onClick={saveData}
-        disabled={data.length === 0}
+        loading={loading}
+        disabled={data.length === 0 || loading}
       >
         Save
       </Button>

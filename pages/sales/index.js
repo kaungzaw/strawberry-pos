@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { withAuthSsr } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import { Item } from "models";
-import { getDocuments } from "lib/helpers";
+import Sale from "models/Sale";
+import moment from "moment";
 
 export const getServerSideProps = withAuthSsr(async ({ query }) => {
   try {
@@ -16,21 +16,53 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
     const limit = query.limit ? Number(query.limit) : 10;
     const skip = query.skip ? Number(query.skip) : 0;
 
-    const total = await Item.find().count();
-    let result = await Item.find().sort(sort).limit(limit).skip(skip);
-    result = getDocuments(result);
+    const total = await Sale.find().count();
+    const result = await Sale.aggregate([
+      {
+        $lookup: {
+          from: "items",
+          localField: "itemId",
+          foreignField: "_id",
+          as: "foundItems",
+        },
+      },
+      { $unwind: "$foundItems" },
+      {
+        $group: {
+          _id: "$_id",
+          date: { $first: "$date" },
+          name: { $first: "$foundItems.name" },
+          sell_price: { $first: "$foundItems.sell_price" },
+          quantity: { $first: "$quantity" },
+        },
+      },
+      {
+        $project: {
+          date: 1,
+          name: 1,
+          sell_price: 1,
+          quantity: 1,
+          total: {
+            $multiply: ["$sell_price", "$quantity"],
+          },
+        },
+      },
+    ])
+      .sort(sort)
+      .limit(limit)
+      .skip(skip);
     return {
-      props: { items: { total, result }, success: true },
+      props: { data: { total, result }, success: true },
     };
   } catch (error) {
     console.log(error);
     return {
-      props: { items: { total: 0, result: [] }, success: false },
+      props: { data: { total: 0, result: [] }, success: false },
     };
   }
 });
 
-const Items = ({ items }) => {
+const Sales = ({ data }) => {
   const router = useRouter();
   let { skip, limit, sort } = router.query;
   limit = limit ? Number(limit) : 10;
@@ -40,12 +72,23 @@ const Items = ({ items }) => {
     position: ["topRight"],
     showSizeChanger: true,
     pageSizeOptions: [10, 50],
-    total: items.total,
+    total: data.total,
     current: skip / limit + 1,
     pageSize: limit,
   });
 
   const columns = [
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+      sorter: true,
+      sortOrder:
+        sort === "date" ? "ascend" : sort === "-date" ? "descend" : false,
+      render: (record) => (
+        <span>{moment(record.date).format("DD/MM/YYYY")}</span>
+      ),
+    },
     {
       title: "Name",
       dataIndex: "name",
@@ -53,18 +96,6 @@ const Items = ({ items }) => {
       sorter: true,
       sortOrder:
         sort === "name" ? "ascend" : sort === "-name" ? "descend" : false,
-    },
-    {
-      title: "Buy Price",
-      dataIndex: "buy_price",
-      key: "buy_price",
-      sorter: true,
-      sortOrder:
-        sort === "buy_price"
-          ? "ascend"
-          : sort === "-buy_price"
-          ? "descend"
-          : false,
     },
     {
       title: "Sell Price",
@@ -91,13 +122,12 @@ const Items = ({ items }) => {
           : false,
     },
     {
-      title: "Action",
-      key: "action",
-      render: (record) => (
-        <Button>
-          <Link href={`/items/${record._id}`}>Edit</Link>
-        </Button>
-      ),
+      title: "Total",
+      dataIndex: "total",
+      key: "total",
+      sorter: true,
+      sortOrder:
+        sort === "total" ? "ascend" : sort === "-total" ? "descend" : false,
     },
   ];
 
@@ -119,16 +149,14 @@ const Items = ({ items }) => {
   return (
     <>
       <Head>
-        <title>POS - Items</title>
+        <title>POS - Sales</title>
       </Head>
       <Button type="primary">
-        <Link href="/items/create">Create</Link>
+        <Link href="/sales/create">Create</Link>
       </Button>
-      <br />
-      <br />
       <Table
         columns={columns}
-        dataSource={items.result}
+        dataSource={data.result}
         rowKey="_id"
         onChange={handleTableChange}
         pagination={pagination}
@@ -139,4 +167,4 @@ const Items = ({ items }) => {
   );
 };
 
-export default Items;
+export default Sales;

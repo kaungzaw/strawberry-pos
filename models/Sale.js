@@ -1,22 +1,17 @@
 import mongoose from "mongoose";
-import { Sale } from "models";
 
-const schemaName = "Item";
+const schemaName = "Sale";
 const schema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
   },
-  name: {
+  date: {
     type: String,
     required: true,
   },
-  buy_price: {
-    type: Number,
-    required: true,
-  },
-  sell_price: {
-    type: Number,
+  itemId: {
+    type: String,
     required: true,
   },
   quantity: {
@@ -24,8 +19,6 @@ const schema = new mongoose.Schema({
     required: true,
   },
 });
-
-schema.pre("deleteOne", (next) => Sale.deleteMany({ itemId: this._id }, next));
 
 export default mongoose.models[schemaName] ||
   mongoose.model(schemaName, schema);

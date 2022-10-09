@@ -1,6 +1,6 @@
 import { withAuthRoute } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import { Item } from "models";
+import { Item, Sale } from "models";
 
 async function handler(req, res) {
   await dbConnect();
@@ -8,16 +8,11 @@ async function handler(req, res) {
   if (req.method === "DELETE") {
     try {
       const { _id } = req.query;
-      await Item.deleteOne({ _id });
-      res.status(200).end();
-    } catch (error) {
-      console.log(error);
-      res.status(400).end();
-    }
-  } else if (req.method === "PUT") {
-    try {
-      const { _id } = req.query;
-      await Item.updateOne({ _id }, req.body);
+      const foundSale = await Sale.findOne({ _id });
+      const itemId = foundSale._doc.itemId;
+      const quantity = foundSale._doc.quantity;
+      await Sale.deleteOne({ _id });
+      await Item.updateOne({ _id: itemId }, { $inc: { quantity: quantity } });
       res.status(200).end();
     } catch (error) {
       console.log(error);

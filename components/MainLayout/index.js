@@ -15,6 +15,10 @@ const items = [
     key: "daily-reports",
   },
   {
+    label: <Link href="/sales?">Sales</Link>,
+    key: "sales",
+  },
+  {
     label: "More",
     key: "more",
     children: [{ label: "Log Out", key: "logout" }],

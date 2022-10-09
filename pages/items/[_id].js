@@ -1,10 +1,11 @@
 import Head from "next/head";
-import { Form, Input, InputNumber, Button, message } from "antd";
+import { Form, Input, InputNumber, Button, Modal, message } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { withAuthSsr } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import Item from "models/Item";
+import { Item } from "models";
 import { getDocuments } from "lib/helpers";
 
 export const getServerSideProps = withAuthSsr(async ({ query }) => {
@@ -42,14 +43,22 @@ const EditItem = ({ item }) => {
   }
 
   const handleDelete = async () => {
-    try {
-      await axios.delete(`/api/items/${item._id}`);
-      message.success("Item deleted successfully.");
-      router.push("/items?");
-    } catch (error) {
-      console.log(error);
-      message.error("Failed to delete Item.");
-    }
+    const { _id, name } = item;
+    Modal.confirm({
+      title: "Do you want to delete this Item?",
+      icon: <ExclamationCircleOutlined />,
+      content: <div>{`Name: ${name}`}</div>,
+      onOk: async () => {
+        try {
+          await axios.delete(`/api/items/${_id}`);
+          message.success("Item deleted successfully.");
+          router.push("/items?");
+        } catch (error) {
+          console.log(error);
+          message.error("Failed to delete Item.");
+        }
+      },
+    });
   };
 
   return (
