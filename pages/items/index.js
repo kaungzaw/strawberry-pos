@@ -38,6 +38,7 @@ const Items = ({ items }) => {
 
   const [pagination, setPagination] = useState({
     position: ["topRight"],
+    showTotal: () => "Total: " + items.total,
     showSizeChanger: true,
     pageSizeOptions: [10, 50],
     total: items.total,
