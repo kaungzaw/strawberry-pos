@@ -65,6 +65,7 @@ const CreateSale = ({ items, sales }) => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const [maxQuantity, setMaxQuantity] = useState(0);
 
   async function onFinish(values) {
     try {
@@ -79,6 +80,7 @@ const CreateSale = ({ items, sales }) => {
         quantity,
       });
       form.resetFields();
+      setMaxQuantity(0);
       router.replace(router.asPath);
       message.success("Sale created successfully.");
     } catch (error) {
@@ -98,6 +100,8 @@ const CreateSale = ({ items, sales }) => {
       onOk: async () => {
         try {
           await axios.delete(`/api/sales/${_id}`);
+          form.resetFields();
+          setMaxQuantity(0);
           router.replace(router.asPath);
           message.success("Sale deleted successfully.");
         } catch (error) {
@@ -106,6 +110,13 @@ const CreateSale = ({ items, sales }) => {
         }
       },
     });
+  };
+
+  const onValuesChange = (changeValues) => {
+    if (changeValues.item) {
+      const item = JSON.parse(changeValues.item);
+      setMaxQuantity(item.quantity);
+    }
   };
 
   const columns = [
@@ -155,7 +166,12 @@ const CreateSale = ({ items, sales }) => {
       <Head>
         <title>POS - Create Sale</title>
       </Head>
-      <Form form={form} onFinish={onFinish} layout="vertical">
+      <Form
+        form={form}
+        onFinish={onFinish}
+        onValuesChange={onValuesChange}
+        layout="vertical"
+      >
         <Form.Item label="Item" name="item" rules={[{ required: true }]}>
           <Select
             placeholder="Select Item"
@@ -165,11 +181,14 @@ const CreateSale = ({ items, sales }) => {
             }
             showSearch
           >
-            {items.map((item) => (
-              <Select.Option key={item._id} value={JSON.stringify(item)}>
-                {item.name}
-              </Select.Option>
-            ))}
+            {items.map(
+              (item) =>
+                item.quantity !== 0 && (
+                  <Select.Option key={item._id} value={JSON.stringify(item)}>
+                    {item.name}
+                  </Select.Option>
+                )
+            )}
           </Select>
         </Form.Item>
 
@@ -178,7 +197,7 @@ const CreateSale = ({ items, sales }) => {
           name="quantity"
           rules={[{ required: true }]}
         >
-          <InputNumber min={0} />
+          <InputNumber min={0} max={maxQuantity} disabled={maxQuantity === 0} />
         </Form.Item>
 
         <Form.Item>
