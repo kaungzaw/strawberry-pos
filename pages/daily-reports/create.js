@@ -164,7 +164,7 @@ const CreateDailyReport = ({ items }) => {
           name="quantity"
           rules={[{ required: true }]}
         >
-          <InputNumber />
+          <InputNumber min={0} />
         </Form.Item>
 
         <Form.Item>

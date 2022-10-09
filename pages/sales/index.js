@@ -32,7 +32,7 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
           _id: "$_id",
           date: { $first: "$date" },
           name: { $first: "$foundItems.name" },
-          sell_price: { $first: "$foundItems.sell_price" },
+          sell_price: { $first: "$sell_price" },
           quantity: { $first: "$quantity" },
         },
       },

@@ -32,7 +32,7 @@ export const getServerSideProps = withAuthSsr(async () => {
           _id: "$_id",
           date: { $first: "$date" },
           name: { $first: "$foundItems.name" },
-          sell_price: { $first: "$foundItems.sell_price" },
+          sell_price: { $first: "$sell_price" },
           quantity: { $first: "$quantity" },
         },
       },
@@ -75,6 +75,7 @@ const CreateSale = ({ items, sales }) => {
       await axios.post("/api/sales", {
         date,
         itemId: item._id,
+        sell_price: item.sell_price,
         quantity,
       });
       form.resetFields();
@@ -177,7 +178,7 @@ const CreateSale = ({ items, sales }) => {
           name="quantity"
           rules={[{ required: true }]}
         >
-          <InputNumber />
+          <InputNumber min={0} />
         </Form.Item>
 
         <Form.Item>

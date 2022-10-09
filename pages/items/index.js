@@ -124,8 +124,6 @@ const Items = ({ items }) => {
       <Button type="primary">
         <Link href="/items/create">Create</Link>
       </Button>
-      <br />
-      <br />
       <Table
         columns={columns}
         dataSource={items.result}

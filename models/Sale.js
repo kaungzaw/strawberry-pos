@@ -14,6 +14,10 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sell_price: {
+    type: Number,
+    required: true,
+  },
   quantity: {
     type: Number,
     required: true,

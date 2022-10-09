@@ -25,7 +25,9 @@ const schema = new mongoose.Schema({
   },
 });
 
-schema.pre("deleteOne", (next) => Sale.deleteMany({ itemId: this._id }, next));
+schema.pre("deleteOne", function (next) {
+  Sale.deleteMany({ itemId: this._id }, next);
+});
 
 export default mongoose.models[schemaName] ||
   mongoose.model(schemaName, schema);
