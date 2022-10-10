@@ -3,6 +3,8 @@ import "../styles/nprogress.css";
 import NProgress from "nprogress";
 import MainLayout from "components/MainLayout";
 
+NProgress.configure({ showSpinner: false });
+
 function MyApp({ Component, pageProps, ...rest }) {
   const { router } = rest;
 
