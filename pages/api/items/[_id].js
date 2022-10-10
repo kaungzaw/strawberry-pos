@@ -1,6 +1,6 @@
 import { withAuthRoute } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import { Item } from "models";
+import Item from "@models/Item";
 
 async function handler(req, res) {
   await dbConnect();

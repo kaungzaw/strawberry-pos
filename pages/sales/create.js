@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { withAuthSsr } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import Item from "models/Item";
-import Sale from "models/Sale";
+import Item from "@models/Item";
+import Sale from "@models/Sale";
 import { getDocuments } from "lib/helpers";
 import moment from "moment";
 

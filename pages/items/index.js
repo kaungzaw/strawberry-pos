@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { withAuthSsr } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import { Item } from "models";
+import Item from "@models/Item";
 import { getDocuments } from "lib/helpers";
 
 export const getServerSideProps = withAuthSsr(async ({ query }) => {

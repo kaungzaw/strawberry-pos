@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Sale } from "models";
+import Sale from "@models/Sale";
 
 const schemaName = "Item";
 const schema = new mongoose.Schema({

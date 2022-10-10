@@ -1,11 +1,8 @@
-import { useState } from "react";
 import Head from "next/head";
 import { Table, Typography } from "antd";
-import { useRouter } from "next/router";
-import Link from "next/link";
 import { withAuthSsr } from "lib/withAuth";
 import dbConnect from "lib/dbConnect";
-import Sale from "models/Sale";
+import Sale from "@models/Sale";
 import moment from "moment";
 
 const { Title } = Typography;
