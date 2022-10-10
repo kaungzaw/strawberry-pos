@@ -63,13 +63,11 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
       .skip(skip);
     const total = result.length;
     return {
-      props: { data: { total, result }, success: true },
+      props: { data: { total, result } },
     };
   } catch (error) {
     console.log(error);
-    return {
-      props: { data: { total: 0, result: [] }, success: false },
-    };
+    throw error;
   }
 });
 
@@ -137,15 +135,6 @@ const DailyReports = ({ data }) => {
       <Head>
         <title>POS - Daily Reports</title>
       </Head>
-      <Button type="primary">
-        <Link href="/sales/create">Create</Link>
-      </Button>
-      {data.total === 0 && (
-        <>
-          <br />
-          <br />
-        </>
-      )}
       <Table
         columns={columns}
         dataSource={data.result}

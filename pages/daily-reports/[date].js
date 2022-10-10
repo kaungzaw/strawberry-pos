@@ -68,9 +68,7 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
     };
   } catch (error) {
     console.log(error);
-    return {
-      props: {},
-    };
+    throw error;
   }
 });
 

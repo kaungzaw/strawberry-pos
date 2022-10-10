@@ -52,17 +52,15 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
       .limit(limit + skip)
       .skip(skip);
     return {
-      props: { data: { total, result }, success: true },
+      props: { sales: { total, result } },
     };
   } catch (error) {
     console.log(error);
-    return {
-      props: { data: { total: 0, result: [] }, success: false },
-    };
+    throw error;
   }
 });
 
-const Sales = ({ data }) => {
+const Sales = ({ sales }) => {
   const router = useRouter();
   let { skip, limit, sort } = router.query;
   limit = limit ? Number(limit) : 10;
@@ -72,7 +70,7 @@ const Sales = ({ data }) => {
     position: ["topRight"],
     showSizeChanger: true,
     pageSizeOptions: [10, 50],
-    total: data.total,
+    total: sales.total,
     current: skip / limit + 1,
     pageSize: limit,
   });
@@ -152,7 +150,7 @@ const Sales = ({ data }) => {
       <Button type="primary">
         <Link href="/sales/create">Create</Link>
       </Button>
-      {data.total === 0 && (
+      {sales.total === 0 && (
         <>
           <br />
           <br />
@@ -160,7 +158,7 @@ const Sales = ({ data }) => {
       )}
       <Table
         columns={columns}
-        dataSource={data.result}
+        dataSource={sales.result}
         rowKey="_id"
         onChange={handleTableChange}
         pagination={pagination}

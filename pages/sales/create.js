@@ -50,13 +50,11 @@ export const getServerSideProps = withAuthSsr(async () => {
     ]).sort("-_id");
 
     return {
-      props: { items, sales, success: true },
+      props: { items, sales },
     };
   } catch (error) {
     console.log(error);
-    return {
-      props: { items: [], sales: [], success: false },
-    };
+    throw error;
   }
 });
 

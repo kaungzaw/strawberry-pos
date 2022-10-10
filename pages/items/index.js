@@ -20,13 +20,11 @@ export const getServerSideProps = withAuthSsr(async ({ query }) => {
     let result = await Item.find().sort(sort).limit(limit).skip(skip);
     result = getDocuments(result);
     return {
-      props: { items: { total, result }, success: true },
+      props: { items: { total, result } },
     };
   } catch (error) {
     console.log(error);
-    return {
-      props: { items: { total: 0, result: [] }, success: false },
-    };
+    throw error;
   }
 });
 
