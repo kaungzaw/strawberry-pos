@@ -1,7 +1,14 @@
 import { useState } from "react";
 import Head from "next/head";
 import { Form, Input, InputNumber, Button, message } from "antd";
+import { withAuthSsr } from "@lib/withAuth";
 import axios from "axios";
+
+export const getServerSideProps = withAuthSsr(() => {
+  return {
+    props: {},
+  };
+});
 
 const CreateItem = () => {
   const [form] = Form.useForm();
