@@ -1,5 +1,5 @@
-import { withAuthRoute } from "lib/withAuth";
-import dbConnect from "lib/dbConnect";
+import { withAuthRoute } from "@lib/withAuth";
+import dbConnect from "@lib/dbConnect";
 import Item from "@models/Item";
 import Sale from "@models/Sale";
 

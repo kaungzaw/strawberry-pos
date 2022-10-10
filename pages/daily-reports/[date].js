@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Table, Typography } from "antd";
-import { withAuthSsr } from "lib/withAuth";
-import dbConnect from "lib/dbConnect";
+import { withAuthSsr } from "@lib/withAuth";
+import dbConnect from "@lib/dbConnect";
 import Sale from "@models/Sale";
 import moment from "moment";
 

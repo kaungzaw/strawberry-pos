@@ -1,4 +1,4 @@
-import { withSessionRoute } from "lib/withSession";
+import { withSessionRoute } from "@lib/withSession";
 
 const USERNAME = process.env.USERNAME;
 const PASSWORD = process.env.PASSWORD;

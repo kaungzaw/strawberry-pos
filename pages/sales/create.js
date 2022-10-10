@@ -4,11 +4,11 @@ import { Form, InputNumber, Button, Select, Table, Modal, message } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { withAuthSsr } from "lib/withAuth";
-import dbConnect from "lib/dbConnect";
+import { withAuthSsr } from "@lib/withAuth";
+import dbConnect from "@lib/dbConnect";
 import Item from "@models/Item";
 import Sale from "@models/Sale";
-import { getDocuments } from "lib/helpers";
+import { getDocuments } from "@lib/helpers";
 import moment from "moment";
 
 export const getServerSideProps = withAuthSsr(async () => {

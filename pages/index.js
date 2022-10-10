@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { withAuthSsr } from "lib/withAuth";
+import { withAuthSsr } from "@lib/withAuth";
 
 export const getServerSideProps = withAuthSsr(() => {
   return {

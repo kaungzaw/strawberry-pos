@@ -1,7 +1,7 @@
-import { withAuthRoute } from "lib/withAuth";
-import dbConnect from "lib/dbConnect";
+import { withAuthRoute } from "@lib/withAuth";
+import dbConnect from "@lib/dbConnect";
 import Item from "@models/Item";
-import { create } from "lib/crud";
+import { create } from "@lib/crud";
 
 async function handler(req, res) {
   await dbConnect();

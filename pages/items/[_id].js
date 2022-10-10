@@ -4,10 +4,10 @@ import { Form, Input, InputNumber, Button, Modal, message } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { withAuthSsr } from "lib/withAuth";
-import dbConnect from "lib/dbConnect";
+import { withAuthSsr } from "@lib/withAuth";
+import dbConnect from "@lib/dbConnect";
 import Item from "@models/Item";
-import { getDocuments } from "lib/helpers";
+import { getDocuments } from "@lib/helpers";
 
 export const getServerSideProps = withAuthSsr(async ({ query }) => {
   try {

@@ -1,4 +1,4 @@
-import { withSessionRoute } from "lib/withSession";
+import { withSessionRoute } from "@lib/withSession";
 
 async function handler(req, res) {
   if (req.method === "POST") {
