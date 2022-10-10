@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { Button, Form, Input, message, Typography } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
@@ -27,6 +28,9 @@ const Login = () => {
 
   return (
     <>
+      <Head>
+        <title>POS - Log In</title>
+      </Head>
       <Title className={styles["title"]}>Strawberry - POS</Title>
       <Form onFinish={onFinish} className={styles["form"]}>
         <Form.Item
